@@ -2,17 +2,50 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\KategoriController;
+use App\Http\Controllers\Api\RiwayatBelajarController;
+use App\Http\Controllers\Api\MateriController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Di sinilah Anda akan mendaftarkan semua rute API untuk aplikasi Anda.
-| Rute-rute ini akan secara otomatis memiliki prefix /api.
-|
-*/
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthController::class, 'login']);
+
+
+// == RUTE UNTUK PENGGUNA TEROTENTIKASI (UserPembelajar & Admin) ==
+// Semua rute di dalam grup ini wajib mengirimkan token yang valid.
+Route::middleware('auth:sanctum')->group(function () {
+    
+    // Rute untuk mendapatkan data profil pengguna yang sedang login
+    Route::get('/user', function (Request $request) {
+        return $request->user()->load('roles:name'); 
+    });
+
+    // Rute untuk mendapatkan daftar semua kategori
+    // Endpoint: GET /api/kategori
+    Route::get('/kategori', [KategoriController::class, 'index']);
+
+    // Rute untuk mendapatkan semua materi di dalam satu kategori spesifik
+    // Contoh: GET /api/kategori/1/materi
+    Route::get('/kategori/{kategori}/materi', [KategoriController::class, 'showMateri']);
+    // (perlu membuat method showMateri di KategoriController)
+
+    // Rute untuk mencatat progres belajar
+    // Endpoint: POST /api/riwayat-belajar
+    Route::post('/riwayat-belajar', [RiwayatBelajarController::class, 'store']);
+
+});
+
+
+// == RUTE KHUSUS ADMIN (CRUD) ==
+// Semua rute di dalam grup ini wajib memiliki token DAN peran sebagai 'admin'.
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function() {
+    Route::post('/materi', [MateriController::class, 'store']); // Create
+
+    // Endpoint untuk memperbarui materi yang ada
+    // Contoh: POST /api/materi/5 (catatan: gunakan method POST dengan _method:PUT di Postman)
+    Route::put('/materi/{materi}', [MateriController::class, 'update']); // Update
+
+    // Endpoint untuk menghapus materi
+    // Contoh: DELETE /api/materi/5
+    Route::delete('/materi/{materi}', [MateriController::class, 'destroy']); // Delete
 });
