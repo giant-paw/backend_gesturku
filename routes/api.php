@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MateriController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 
 // == RUTE UNTUK PENGGUNA TEROTENTIKASI (UserPembelajar & Admin) ==
