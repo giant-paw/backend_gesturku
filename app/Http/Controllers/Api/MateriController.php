@@ -127,4 +127,9 @@ class MateriController extends Controller
         // 3. Kembalikan respons sukses tanpa konten
         return response()->json(['message' => 'Materi berhasil dihapus'], 200);
     }
+
+    // TAMPIL MATERI
+    public function show(Materi $materi){
+        return response()->json($materi);
+    }
 }

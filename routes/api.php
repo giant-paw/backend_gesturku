@@ -30,6 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/kategori/{kategori}/materi', [KategoriController::class, 'showMateri']);
     // (perlu membuat method showMateri di KategoriController)
 
+    // Route detail materinya
+    Route::get('materi/detail/{materi}', [MateriController::class, 'show']);
+
     // Rute untuk mencatat progres belajar
     // Endpoint: POST /api/riwayat-belajar
     Route::post('/riwayat-belajar', [RiwayatBelajarController::class, 'store']);
