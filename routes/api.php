@@ -6,11 +6,12 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\RiwayatBelajarController;
 use App\Http\Controllers\Api\MateriController;
-
+use App\Http\Controllers\Api\FileController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/files/{path}', [FileController::class, 'show'])->where('path', '.*');
 
 // == RUTE UNTUK PENGGUNA TEROTENTIKASI (UserPembelajar & Admin) ==
 // Semua rute di dalam grup ini wajib mengirimkan token yang valid.
