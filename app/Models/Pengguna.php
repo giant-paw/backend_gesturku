@@ -4,23 +4,44 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles; 
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Pengguna extends Authenticatable
 {
-    use Notifiable, HasRoles; 
+    use HasApiTokens, Notifiable, HasRoles;
 
-    protected $table = 'pengguna'; 
+    protected $table = 'pengguna';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'nama', 'email', 'kata_sandi', 'path_foto_profil'
+        'nama',
+        'email',
+        'kata_sandi',
+        'path_foto_profil'
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
-        'kata_sandi', 'remember_token',
+        'kata_sandi',
+        'remember_token',
     ];
 
     // Ganti nama kolom password bawaan laravel
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
     public function getAuthPassword()
     {
         return $this->kata_sandi;

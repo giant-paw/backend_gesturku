@@ -20,23 +20,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user()->load('roles:name'); 
     });
-
+    
     // Rute untuk mendapatkan daftar semua kategori
     // Endpoint: GET /api/kategori
     Route::get('/kategori', [KategoriController::class, 'index']);
-
+    
     // Rute untuk mendapatkan semua materi di dalam satu kategori spesifik
     // Contoh: GET /api/kategori/1/materi
     Route::get('/kategori/{kategori}/materi', [KategoriController::class, 'showMateri']);
     // (perlu membuat method showMateri di KategoriController)
-
+    
     // Route detail materinya
     Route::get('materi/detail/{materi}', [MateriController::class, 'show']);
-
+    
     // Rute untuk mencatat progres belajar
     // Endpoint: POST /api/riwayat-belajar
     Route::post('/riwayat-belajar', [RiwayatBelajarController::class, 'store']);
-
+    
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 

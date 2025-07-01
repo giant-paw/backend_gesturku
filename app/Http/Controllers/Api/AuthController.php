@@ -72,4 +72,19 @@ class AuthController extends Controller
             ]
         ], 201); // Status 201 artinya "Created"
     }
+
+    public function logout(Request $request)
+    {
+        // Mengambil pengguna yang terotentikasi berdasarkan token yang dikirim
+        $user = $request->user();
+
+        // Menghapus HANYA token yang digunakan untuk request ini.
+        // Jika user login di perangkat lain, token di perangkat itu tidak akan terhapus.
+        $user->currentAccessToken()->delete();
+
+        // Memberikan respons sukses
+        return response()->json([
+            'message' => 'Logout berhasil dan token telah dihapus'
+        ], 200); // Status 200 OK
+    }
 }
