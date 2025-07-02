@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
@@ -40,27 +41,35 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // 1. Validasi data yang dikirim dari Flutter
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:pengguna',
             'kata_sandi' => ['required', 'confirmed', Rules\Password::defaults()],
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', 
         ]);
 
-        // 2. Buat pengguna baru di tabel 'pengguna'
-        $user = Pengguna::create([
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $dataToCreate = [
             'nama' => $request->nama,
             'email' => $request->email,
             'kata_sandi' => Hash::make($request->kata_sandi),
-        ]);
+        ];
 
-        // 3. Berikan peran default 'userPembelajar' untuk setiap pendaftar baru
+        if ($request->hasFile('foto_profil')) {
+            $path = $request->file('foto_profil')->store('profile-photos', 'public');
+            $dataToCreate['path_foto_profil'] = $path;
+        }
+
+        $user = Pengguna::create($dataToCreate);
+
+        // default 'userPembelajar'
         $user->assignRole('userPembelajar');
 
-        // 4. Buat token agar pengguna bisa langsung login setelah registrasi
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // 5. Kembalikan respons yang sama seperti saat login
         return response()->json([
             'message' => 'Registrasi berhasil',
             'access_token' => $token,
@@ -70,7 +79,7 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->getRoleNames()->first()
             ]
-        ], 201); // Status 201 artinya "Created"
+        ], 201);
     }
 
     public function logout(Request $request)

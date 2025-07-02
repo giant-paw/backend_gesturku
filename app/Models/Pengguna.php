@@ -46,4 +46,9 @@ class Pengguna extends Authenticatable
     {
         return $this->kata_sandi;
     }
+
+    public function riwayatBelajar()
+    {
+        return $this->hasMany(RiwayatBelajar::class, 'pengguna_id');
+    }
 }

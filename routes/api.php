@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\RiwayatBelajarController;
 use App\Http\Controllers\Api\MateriController;
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\ProfilController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -37,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rute untuk mencatat progres belajar
     // Endpoint: POST /api/riwayat-belajar
     Route::post('/riwayat-belajar', [RiwayatBelajarController::class, 'store']);
+
+    Route::get('/profil/progres', [ProfilController::class, 'ringkasanProgres']);
     
     Route::post('/logout', [AuthController::class, 'logout']);
 });
