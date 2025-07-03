@@ -34,7 +34,8 @@ class AuthController extends Controller
             'user' => [
                 'nama' => $user->nama,
                 'email' => $user->email,
-                'role' => $user->getRoleNames()->first()
+                'role' => $user->getRoleNames()->first(),
+                'path_foto_profil' => $user->path_foto_profi
             ]
         ]);
     }
@@ -77,7 +78,8 @@ class AuthController extends Controller
             'user' => [
                 'nama' => $user->nama,
                 'email' => $user->email,
-                'role' => $user->getRoleNames()->first()
+                'role' => $user->getRoleNames()->first(),
+                'path_foto_profil' => $user->path_foto_profi
             ]
         ], 201);
     }
