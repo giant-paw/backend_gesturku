@@ -17,8 +17,18 @@ class KategoriController extends Controller
     public function showMateri(Kategori $kategori) {
 
         // Route Model Binding ( /kategori/{kategori}/materi)
-        $materi = $kategori->materi()->orderBy('urutan', 'asc')->get();
+        $semuaMateri = $kategori->materi()->orderBy('urutan', 'asc')->get();
 
-        return response()->json($materi);
+        $pengguna = Auth::user();
+
+        $materiSelesaiIds = $pengguna->riwayatBelajar()
+                                    ->pluck('materi_id');
+
+        $materiDenganProgres = $semuaMateri->map(function ($materi) use ($materiSelesaiIds) {
+            $materi->is_completed = $materiSelesaiIds->contains($materi->id);
+            return $materi;
+        });
+
+        return response()->json($materiDenganProgres);
     }
 }
