@@ -41,6 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profil/progres', [ProfilController::class, 'ringkasanProgres']);
 
     Route::get('/leaderboard', [LeaderboardController::class, 'index']);
+
+    // EDIT INFO PEMBELAJAR
+    Route::post('/profil/update', [ProfilController::class, 'update']);
     
     Route::post('/logout', [AuthController::class, 'logout']);
 });
