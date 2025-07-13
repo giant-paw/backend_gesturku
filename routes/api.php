@@ -52,6 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
 // == RUTE KHUSUS ADMIN (CRUD) ==
 // Semua rute di dalam grup ini wajib memiliki token DAN peran sebagai 'admin'.
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function() {
+
+    Route::get('/admin/materi', [MateriController::class, 'indexAdmin']);
+    
     Route::post('/materi', [MateriController::class, 'store']); // Create
 
     // Endpoint untuk memperbarui materi yang ada

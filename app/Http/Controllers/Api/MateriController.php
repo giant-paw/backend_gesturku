@@ -132,4 +132,12 @@ class MateriController extends Controller
     public function show(Materi $materi){
         return response()->json($materi);
     }
+
+
+    // MULAI ADMIN
+    public function indexAdmin()
+    {
+        $materi = Materi::with('kategori')->orderBy('id', 'desc')->get();
+        return response()->json($materi);
+    }
 }
